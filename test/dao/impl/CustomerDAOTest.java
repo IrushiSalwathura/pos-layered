@@ -1,4 +1,4 @@
-package dao;
+package dao.impl;
 
 import entity.Customer;
 
@@ -6,7 +6,7 @@ import java.util.List;
 
 public class CustomerDAOTest {
     public static void main(String[] args) {
-        List<Customer> allCustomer = CustomerDAO.findAllCustomers();
+        List<Customer> allCustomer = CustomerDAOImpl.findAllCustomers();
         for (Customer customer : allCustomer) {
             System.out.println(customer);
 
