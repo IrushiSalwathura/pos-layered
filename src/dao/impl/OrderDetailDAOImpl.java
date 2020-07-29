@@ -1,5 +1,6 @@
 package dao.impl;
 
+import dao.OrderDetailDAO;
 import db.DBConnection;
 import entity.Order;
 import entity.OrderDetail;
@@ -9,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDetailDAOImpl {
+public class OrderDetailDAOImpl implements OrderDetailDAO {
     public List<OrderDetail> findAllOrderDetails(){
         try {
             Connection connection = DBConnection.getInstance().getConnection();

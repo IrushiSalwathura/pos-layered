@@ -1,5 +1,6 @@
 package dao.impl;
 
+import dao.CustomerDAO;
 import db.DBConnection;
 import entity.Customer;
 
@@ -7,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerDAOImpl {
+public class CustomerDAOImpl implements CustomerDAO {
     public List<Customer> findAllCustomers(){
         try {
             Connection connection = DBConnection.getInstance().getConnection();
