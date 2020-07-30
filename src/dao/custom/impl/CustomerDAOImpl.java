@@ -1,43 +1,40 @@
-package dao.impl;
+package dao.custom.impl;
 
-import dao.OrderDAO;
+import dao.custom.CustomerDAO;
 import db.DBConnection;
-import entity.Item;
-import entity.Order;
+import entity.Customer;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDAOImpl implements OrderDAO {
+public class CustomerDAOImpl implements CustomerDAO {
 
-    @Override
-    public List<Order> findAll() {
+    public List<Customer> findAll(){
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM `Order`");
-            ArrayList<Order> orders = new ArrayList<>();
+            ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
+            ArrayList<Customer> customers = new ArrayList<>();
             while(rst.next()){
-                orders.add(new Order(rst.getString(1),rst.getDate(2),rst.getString(3)));
+                customers.add(new Customer(rst.getString(1),rst.getString(2),rst.getString(3)));
             }
-            return orders;
+            return customers;
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return null;
     }
-
     @Override
-    public Order find(String pk) {
+    public Customer find(String pk) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM `Order` WHERE id = ?");
+            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer WHERE id = ?");
             pstm.setObject(1,pk);
             ResultSet rst = pstm.executeQuery();
             while(rst.next()){
-                return new Order(rst.getString(1),rst.getDate(2),rst.getString(3));
+                return new Customer(rst.getString(1),rst.getString(2),rst.getString(3));
             }
             return null;
 
@@ -48,13 +45,13 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public boolean save(Order entity) {
+    public boolean save(Customer entity) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO `Order` VALUES (?,?,?)");
+            PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer VALUES (?,?,?)");
             pstm.setObject(1,entity.getId());
-            pstm.setObject(2,entity.getDate());
-            pstm.setObject(3,entity.getCustomerId());
+            pstm.setObject(2,entity.getName());
+            pstm.setObject(3,entity.getAddress());
             return pstm.executeUpdate()>0;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -63,13 +60,13 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public boolean update(Order entity) {
+    public boolean update(Customer entity) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("UPDATE `Order` SET customerId=? WHERE id=? and date=?");
-            pstm.setObject(2,entity.getId());
-            pstm.setObject(1,entity.getCustomerId());
-            pstm.setObject(3,entity.getDate());
+            PreparedStatement pstm = connection.prepareStatement("UPDATE Customer SET name=?, address=? WHERE id=?");
+            pstm.setObject(3,entity.getId());
+            pstm.setObject(1,entity.getName());
+            pstm.setObject(2,entity.getAddress());
             return pstm.executeUpdate()>0;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -81,7 +78,7 @@ public class OrderDAOImpl implements OrderDAO {
     public boolean delete(String pk) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("DELETE FROM `Order` WHERE id=?");
+            PreparedStatement pstm = connection.prepareStatement("DELETE FROM Customer WHERE id=?");
             pstm.setObject(1,pk);
             return pstm.executeUpdate()>0;
         } catch (SQLException throwables) {
@@ -89,12 +86,13 @@ public class OrderDAOImpl implements OrderDAO {
             return false;
         }
     }
-    public String getLastOrderId(){
+
+    public String getLastCustomerId(){
 
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM `Order` ORDER BY id DESC LIMIT 1");
+            ResultSet rst = stm.executeQuery("SELECT * FROM Customer ORDER BY id DESC LIMIT 1");
             if(!rst.next()){
                 return null;
             }else{

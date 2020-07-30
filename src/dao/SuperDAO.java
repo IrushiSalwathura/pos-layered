@@ -1,10 +1,9 @@
 package dao;
 
-import entity.Item;
-
+import java.io.Serializable;
 import java.util.List;
 
-public interface SuperDAO<T,ID> {
+public interface SuperDAO<T extends Serializable,ID extends Serializable> {
     List<T> findAll();
     T find(ID pk);
     boolean save(T entity);
