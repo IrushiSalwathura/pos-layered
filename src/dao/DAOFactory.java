@@ -22,7 +22,22 @@ public class DAOFactory {
         return (daoFactory == null)? daoFactory = new DAOFactory(): daoFactory;
     }
 
-    public CustomerDAO getCustomerDAO(){
+    public SuperDAO getDAO(DAOType daoType){
+        switch (daoType){
+            case CUSTOMER:
+                return new CustomerDAOImpl();
+            case ITEM :
+                return new ItemDAOImpl();
+            case ORDER :
+                return new OrderDAOImpl();
+            case ORDERDETAIL :
+                return new OrderDetailDAOImpl();
+            default:
+                return null;
+        }
+    }
+
+    /*public CustomerDAO getCustomerDAO(){
         return new CustomerDAOImpl();
     }
 
@@ -36,5 +51,5 @@ public class DAOFactory {
 
     public OrderDetailDAO geOrderDetailDAO(){
         return new OrderDetailDAOImpl();
-    }
+    }*/
 }
