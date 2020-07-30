@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDAOImpl implements ItemDAO {
-    public List<Object> findAll(){
+
+    @Override
+    public List<Item> findAll() {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             Statement stm = connection.createStatement();
             ResultSet rst = stm.executeQuery("SELECT * FROM Item");
-            ArrayList<Object> items = new ArrayList<>();
+            ArrayList<Item> items = new ArrayList<>();
             while(rst.next()){
                 items.add(new Item(rst.getString(1),rst.getString(2),rst.getBigDecimal(3),rst.getInt(4)));
             }
@@ -27,11 +29,12 @@ public class ItemDAOImpl implements ItemDAO {
         return null;
     }
 
-    public Item find(Object key){
+    @Override
+    public Item find(String pk) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code = ?");
-            pstm.setObject(1,key);
+            pstm.setObject(1,pk);
             ResultSet rst = pstm.executeQuery();
             while(rst.next()){
                 return new Item(rst.getString(1),rst.getString(2),rst.getBigDecimal(3),rst.getInt(4));
@@ -44,15 +47,15 @@ public class ItemDAOImpl implements ItemDAO {
         }
     }
 
-    public boolean save(Object entity) {
+    @Override
+    public boolean save(Item entity) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement pstm = connection.prepareStatement("INSERT INTO Item VALUES (?,?,?,?)");
-            Item item = (Item) entity;
-            pstm.setObject(1, item.getCode());
-            pstm.setObject(2, item.getDescription());
-            pstm.setObject(3, item.getUnitPrice());
-            pstm.setObject(4, item.getQtyOnHand());
+            pstm.setObject(1, entity.getCode());
+            pstm.setObject(2, entity.getDescription());
+            pstm.setObject(3, entity.getUnitPrice());
+            pstm.setObject(4, entity.getQtyOnHand());
             return pstm.executeUpdate() > 0;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -60,15 +63,15 @@ public class ItemDAOImpl implements ItemDAO {
         }
     }
 
-    public boolean update(Object entity){
+    @Override
+    public boolean update(Item entity) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
-            Item item = (Item) entity;
-            pstm.setObject(4,item.getCode());
-            pstm.setObject(1,item.getDescription());
-            pstm.setObject(2,item.getUnitPrice());
-            pstm.setObject(3,item.getQtyOnHand());
+            pstm.setObject(4,entity.getCode());
+            pstm.setObject(1,entity.getDescription());
+            pstm.setObject(2,entity.getUnitPrice());
+            pstm.setObject(3,entity.getQtyOnHand());
             return pstm.executeUpdate()>0;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -76,17 +79,19 @@ public class ItemDAOImpl implements ItemDAO {
         }
     }
 
-    public boolean delete(Object key){
+    @Override
+    public boolean delete(String pk) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
-            pstm.setObject(1,key);
+            pstm.setObject(1,pk);
             return pstm.executeUpdate()>0;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return false;
         }
     }
+
     public String getLastItemCode(){
 
         try {
