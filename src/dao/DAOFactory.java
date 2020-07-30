@@ -1,13 +1,8 @@
 package dao;
 
-import dao.custom.CustomerDAO;
-import dao.custom.ItemDAO;
-import dao.custom.OrderDAO;
-import dao.custom.OrderDetailDAO;
-import dao.custom.impl.CustomerDAOImpl;
-import dao.custom.impl.ItemDAOImpl;
-import dao.custom.impl.OrderDAOImpl;
-import dao.custom.impl.OrderDetailDAOImpl;
+import com.sun.org.apache.regexp.internal.RE;
+import dao.custom.*;
+import dao.custom.impl.*;
 import db.DBConnection;
 import entity.Item;
 
@@ -32,6 +27,8 @@ public class DAOFactory {
                 return (T) new OrderDAOImpl();
             case ORDERDETAIL :
                 return (T) new OrderDetailDAOImpl();
+            case QUERY:
+                return (T) new QueryDAOImpl();
             default:
                 return null;
         }

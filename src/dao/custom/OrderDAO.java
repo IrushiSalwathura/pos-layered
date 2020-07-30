@@ -1,10 +1,10 @@
 package dao.custom;
 
-import dao.SuperDAO;
+import dao.CrudDAO;
 import entity.Order;
 
 import java.util.List;
 
-public interface OrderDAO extends SuperDAO<Order,String> {
+public interface OrderDAO extends CrudDAO<Order,String> {
     public String getLastOrderId();
 }
