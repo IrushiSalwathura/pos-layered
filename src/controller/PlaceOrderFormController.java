@@ -24,11 +24,9 @@ import javafx.stage.Stage;
 import util.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -257,7 +255,7 @@ public class PlaceOrderFormController {
             return;
         }
 
-        boolean result = BusinessLogic.placeOrder(new OrderTM(lblId.getText(), LocalDate.now(), cmbCustomerId.getValue().getId(), cmbCustomerId.getValue().getName(),0),tblOrderDetails.getItems());
+        boolean result = BusinessLogic.placeOrder(new OrderTM(lblId.getText(), Date.valueOf(LocalDate.now()), cmbCustomerId.getValue().getId(), cmbCustomerId.getValue().getName(), BigDecimal.ZERO),tblOrderDetails.getItems());
         if (!result){
             new Alert(Alert.AlertType.ERROR, "Mudalali wade awul wage", ButtonType.OK).show();
             return;

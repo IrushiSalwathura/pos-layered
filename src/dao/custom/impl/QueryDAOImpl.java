@@ -55,7 +55,7 @@ public class QueryDAOImpl implements QueryDAO {
     @Override
     public List<CustomEntity> searchOrder() {
             try {
-                ArrayList<CustomEntity> orders = new ArrayList<>();
+                List<CustomEntity> orders = new ArrayList<>();
                 Connection connection = DBConnection.getInstance().getConnection();
                 PreparedStatement pstm = connection.prepareStatement("SELECT o.id,C.name,o.date,C.id,SUM(OD.qty*OD.unitPrice) AS 'Total' FROM `Order` O\n" +
                         "INNER JOIN Customer C on O.customerId = C.id\n" +

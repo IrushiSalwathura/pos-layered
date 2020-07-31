@@ -1,7 +1,10 @@
 package controller;
 
+import business.BusinessLogic;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +18,7 @@ import util.OrderTM;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class SearchOrdersFormController {
     public TextField txtSearch;
@@ -28,6 +32,7 @@ public class SearchOrdersFormController {
         tblOrders.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("customerName"));
         tblOrders.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("orderTotal"));
 
+        loadTable();
         txtSearch.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -62,6 +67,13 @@ public class SearchOrdersFormController {
             stage.centerOnScreen();
             stage.show();
         }
+    }
+    public void loadTable(){
+        tblOrders.getItems().clear();
+        List<OrderTM> allOrders = BusinessLogic.searchOrder();
+        ObservableList<OrderTM> orders = FXCollections.observableArrayList(allOrders);
+        tblOrders.setItems(orders);
+
     }
 
 }

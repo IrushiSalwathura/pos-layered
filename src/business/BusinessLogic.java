@@ -2,19 +2,9 @@ package business;
 
 import dao.DAOFactory;
 import dao.DAOType;
-import dao.custom.CustomerDAO;
-import dao.custom.ItemDAO;
-import dao.custom.OrderDAO;
-import dao.custom.OrderDetailDAO;
-import dao.custom.impl.CustomerDAOImpl;
-import dao.custom.impl.ItemDAOImpl;
-import dao.custom.impl.OrderDAOImpl;
-import dao.custom.impl.OrderDetailDAOImpl;
+import dao.custom.*;
 import db.DBConnection;
-import entity.Customer;
-import entity.Item;
-import entity.Order;
-import entity.OrderDetail;
+import entity.*;
 import util.CustomerTM;
 import util.ItemTM;
 import util.OrderDetailTM;
@@ -136,13 +126,24 @@ public class BusinessLogic {
         ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM );
         return itemDAO.update(new Item(itemCode, description, BigDecimal.valueOf(unitPrice),qtyOnHand));
     }
+    public static List<OrderTM> searchOrder(){
+        QueryDAO queryDAO = DAOFactory.getInstance().getDAO(DAOType.QUERY);
+        List<CustomEntity> searchOrders =  queryDAO.searchOrder();
+        List<OrderTM> allOrders = new ArrayList<>();
+        for (CustomEntity searchOrder : searchOrders) {
+            allOrders.add(new OrderTM(searchOrder.getOrderId(),searchOrder.getOrderDate(),
+                    searchOrder.getCustomerName()
+                    ,searchOrder.getCustomerId(),searchOrder.getTotal()));
+        }
+        return allOrders;
 
+    }
     public static boolean placeOrder(OrderTM order, List<OrderDetailTM> orderDetails) {
         Connection connection = DBConnection.getInstance().getConnection();
         try {
             connection.setAutoCommit(false);
             OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
-            boolean result = orderDAO.save(new Order(order.getOrderId(), Date.valueOf(order.getOrderDate()), order.getCustomerId()));
+            boolean result = orderDAO.save(new Order(order.getOrderId(), order.getOrderDate(), order.getCustomerId()));
             if (!result) {
                 connection.rollback();
                 return false;
